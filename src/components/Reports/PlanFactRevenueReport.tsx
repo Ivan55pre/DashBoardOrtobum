@@ -650,7 +650,7 @@ const PlanFactRevenueReport: React.FC = () => {
         </div>
 
         <div className="p-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-dark-700">
-          <p>* Процент выполнения плана: зеленый ≥100%, желтый ≥80%, красный <80%</p>
+          <p>* Процент выполнения плана: зеленый &ge;100%, желтый &ge;80%, красный &lt;80%</p>
         </div>
       </div>
     )
@@ -725,7 +725,7 @@ const PlanFactRevenueReport: React.FC = () => {
       </div>
 
       <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
-        <p>* Процент выполнения плана: зеленый ≥100%, желтый ≥80%, красный <80%</p>
+        <p>* Процент выполнения плана: зеленый &ge;100%, желтый &ge;80%, красный &lt;80%</p>
         <p>* Нажмите на стрелки для разворачивания/сворачивания подразделений</p>
       </div>
     </div>
