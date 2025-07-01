@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ChevronDown, ChevronRight, Download, Filter, Calendar } from 'lucide-react'
+import { ChevronDown, ChevronRight, Download, Calendar } from 'lucide-react'
 import { supabase } from '../../contexts/AuthContext'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -25,6 +25,10 @@ const PlanFactRevenueReport: React.FC = () => {
   const [reportDate, setReportDate] = useState(new Date().toISOString().split('T')[0])
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
   const [isMobile, setIsMobile] = useState(false)
+  
+  // Filter states
+  const [selectedOrganization, setSelectedOrganization] = useState<string>('')
+  const [availableOrganizations, setAvailableOrganizations] = useState<string[]>([])
 
   // Helper function to generate UUID v4
   const generateUUID = (): string => {
@@ -50,7 +54,7 @@ const PlanFactRevenueReport: React.FC = () => {
     if (user) {
       loadSampleData()
     }
-  }, [user, reportDate])
+  }, [user, reportDate, selectedOrganization])
 
   const loadSampleData = async () => {
     setLoading(true)
@@ -67,11 +71,32 @@ const PlanFactRevenueReport: React.FC = () => {
       if (error) throw error
 
       if (existingData && existingData.length > 0) {
-        const hierarchyData = buildHierarchy(existingData)
+        // Populate filter options
+        const organizations = [...new Set(existingData
+          .filter(item => item.level === 1)
+          .map(item => item.organization_name))]
+        setAvailableOrganizations(organizations)
+
+        // Apply filters
+        let filteredData = existingData
+        
+        if (selectedOrganization) {
+          filteredData = filteredData.filter(item => 
+            item.organization_name === selectedOrganization || 
+            item.is_total_row ||
+            (item.level > 1 && existingData.some(parent => 
+              parent.id === item.parent_organization_id && 
+              parent.organization_name === selectedOrganization
+            ))
+          )
+        }
+
+        const hierarchyData = buildHierarchy(filteredData)
         setData(hierarchyData)
+        
         // Set initial expanded rows for loaded data
         const initialExpanded = new Set<string>()
-        existingData.forEach(item => {
+        filteredData.forEach(item => {
           if (item.level <= 2) {
             initialExpanded.add(item.id)
           }
@@ -85,11 +110,34 @@ const PlanFactRevenueReport: React.FC = () => {
       console.error('Error loading data:', error)
       // Показываем демо-данные в случае ошибки
       const sampleData = getSampleData()
-      setData(sampleData)
+      
+      // Populate filter options from sample data
+      const flatSample = flattenHierarchy(sampleData)
+      const organizations = [...new Set(flatSample
+        .filter(item => item.level === 1)
+        .map(item => item.organization_name))]
+      setAvailableOrganizations(organizations)
+
+      // Apply filters to sample data
+      let filteredSample = flatSample
+      
+      if (selectedOrganization) {
+        filteredSample = filteredSample.filter(item => 
+          item.organization_name === selectedOrganization || 
+          item.is_total_row ||
+          (item.level > 1 && flatSample.some(parent => 
+            parent.id === item.parent_organization_id && 
+            parent.organization_name === selectedOrganization
+          ))
+        )
+      }
+
+      const hierarchyData = buildHierarchy(filteredSample)
+      setData(hierarchyData)
+      
       // Set initial expanded rows for sample data
       const initialExpanded = new Set<string>()
-      const flatSample = flattenHierarchy(sampleData)
-      flatSample.forEach(item => {
+      filteredSample.forEach(item => {
         if (item.level <= 2) {
           initialExpanded.add(item.id)
         }
@@ -125,25 +173,25 @@ const PlanFactRevenueReport: React.FC = () => {
 
       if (error) throw error
       
-      setData(sampleData)
-      
-      // Set initial expanded rows for sample data
-      const initialExpanded = new Set<string>()
-      const flatSample = flattenHierarchy(sampleData)
-      flatSample.forEach(item => {
-        if (item.level <= 2) {
-          initialExpanded.add(item.id)
-        }
-      })
-      setExpandedRows(initialExpanded)
+      // Reload data to apply filters
+      await loadSampleData()
     } catch (error) {
       console.error('Error creating sample data:', error)
+      const sampleData = getSampleData()
+      
+      // Populate filter options from sample data
+      const flatSample = flattenHierarchy(sampleData)
+      const organizations = [...new Set(flatSample
+        .filter(item => item.level === 1)
+        .map(item => item.organization_name))]
+      setAvailableOrganizations(organizations)
+
       setData(sampleData)
       
       // Set initial expanded rows even on error
       const initialExpanded = new Set<string>()
-      const flatSample = flattenHierarchy(sampleData)
-      flatSample.forEach(item => {
+      const flatSampleData = flattenHierarchy(sampleData)
+      flatSampleData.forEach(item => {
         if (item.level <= 2) {
           initialExpanded.add(item.id)
         }
@@ -179,27 +227,10 @@ const PlanFactRevenueReport: React.FC = () => {
     const uuid7 = generateUUID()
     const uuid8 = generateUUID()
     const uuid9 = generateUUID()
-    //const _uuid10 = generateUUID()
-    //const _uuid11 = generateUUID()
-    //const _uuid12 = generateUUID()
-    //const _uuid13 = generateUUID()
-    //const _uuid14 = generateUUID()
-    //const _uuid15 = generateUUID()
-    //const _uuid16 = generateUUID()
-    //const _uuid17 = generateUUID()
-    //const _uuid18 = generateUUID()
-    //const _uuid19 = generateUUID()
-    //const _uuid20 = generateUUID()
-    //const _uuid21 = generateUUID()
-    //const _uuid22 = generateUUID()
-    //const _uuid23 = generateUUID()
-    //const _uuid24 = generateUUID()
-    //const _uuid25 = generateUUID()
     const uuid26 = generateUUID()
     const uuid27 = generateUUID()
     const uuid28 = generateUUID()
     const uuid29 = generateUUID()
-    //const _uuid30 = generateUUID()
 
     return [
       {
@@ -599,6 +630,18 @@ const PlanFactRevenueReport: React.FC = () => {
                 className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-dark-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
+
+            {/* Mobile Filter */}
+            <select
+              value={selectedOrganization}
+              onChange={(e) => setSelectedOrganization(e.target.value)}
+              className="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-dark-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="">Все организации</option>
+              {availableOrganizations.map(org => (
+                <option key={org} value={org}>{org}</option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -607,7 +650,7 @@ const PlanFactRevenueReport: React.FC = () => {
         </div>
 
         <div className="p-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-dark-700">
-          <p>* Процент выполнения плана: зеленый ≥100%, желтый ≥80%, красный &lt;80%</p>
+          <p>* Процент выполнения плана: зеленый ≥100%, желтый ≥80%, красный <80%</p>
         </div>
       </div>
     )
@@ -636,10 +679,16 @@ const PlanFactRevenueReport: React.FC = () => {
             />
           </div>
           
-          <button className="btn-secondary flex items-center space-x-2">
-            <Filter className="w-4 h-4" />
-            <span>Фильтр</span>
-          </button>
+          <select
+            value={selectedOrganization}
+            onChange={(e) => setSelectedOrganization(e.target.value)}
+            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            <option value="">Все организации</option>
+            {availableOrganizations.map(org => (
+              <option key={org} value={org}>{org}</option>
+            ))}
+          </select>
           
           <button 
             onClick={exportToCSV}
@@ -676,7 +725,7 @@ const PlanFactRevenueReport: React.FC = () => {
       </div>
 
       <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
-        <p>* Процент выполнения плана: зеленый ≥100%, желтый ≥80%, красный &lt;80%</p>
+        <p>* Процент выполнения плана: зеленый ≥100%, желтый ≥80%, красный <80%</p>
         <p>* Нажмите на стрелки для разворачивания/сворачивания подразделений</p>
       </div>
     </div>
