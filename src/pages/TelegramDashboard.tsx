@@ -17,7 +17,7 @@ interface DashboardData {
 
 const TelegramDashboard: React.FC = () => {
   const { user } = useAuth()
-  const { webApp } = useTelegram()
+  const { _webApp } = useTelegram()
   const [dashboardData, setDashboardData] = useState<DashboardData>({
     cashBankTotal: 0,
     debtTotal: 0,
