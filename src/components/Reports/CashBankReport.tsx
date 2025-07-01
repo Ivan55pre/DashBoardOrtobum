@@ -181,7 +181,7 @@ const CashBankReport: React.FC = () => {
     const uuid7 = generateUUID()
     const uuid8 = generateUUID()
     const uuid9 = generateUUID()
-    const uuid10 = generateUUID()
+    const _uuid10 = generateUUID()
 
     return [
       {
