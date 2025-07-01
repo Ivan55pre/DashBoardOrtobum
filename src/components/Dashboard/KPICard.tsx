@@ -1,12 +1,12 @@
 import React from 'react'
-import { TrendingUp, TrendingDown, DivideIcon as LucideIcon } from 'lucide-react'
+import { TrendingUp, TrendingDown, DivideIcon as _LucideIcon } from 'lucide-react'
 
 interface KPICardProps {
   title: string
   value: string
   change: string
   trend: 'up' | 'down'
-  icon: LucideIcon
+  icon: _LucideIcon
 }
 
 const KPICard: React.FC<KPICardProps> = ({ title, value, change, trend, icon: Icon }) => {
