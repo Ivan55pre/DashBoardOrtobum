@@ -24,10 +24,10 @@ interface InventoryTurnoverData {
 
 const TelegramTurnoverReport: React.FC = () => {
   const { user } = useAuth()
-  const { webApp } = useTelegram()
+  const { _webApp } = useTelegram()
   const [data, setData] = useState<InventoryTurnoverData[]>([])
   const [loading, setLoading] = useState(true)
-  const [reportDate, setReportDate] = useState(new Date().toISOString().split('T')[0])
+  const [reportDate, _setReportDate] = useState(new Date().toISOString().split('T')[0])
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
   // Helper function to generate UUID v4
@@ -171,12 +171,12 @@ const TelegramTurnoverReport: React.FC = () => {
     const uuid3 = generateUUID()
     const uuid4 = generateUUID()
     const uuid5 = generateUUID()
-    const uuid6 = generateUUID()
-    const uuid7 = generateUUID()
-    const uuid8 = generateUUID()
-    const uuid9 = generateUUID()
-    const uuid10 = generateUUID()
-    const uuid11 = generateUUID()
+    const _uuid6 = generateUUID()
+    const _uuid7 = generateUUID()
+    const _uuid8 = generateUUID()
+    const _uuid9 = generateUUID()
+    const _uuid10 = generateUUID()
+    const _uuid11 = generateUUID()
     const uuid12 = generateUUID()
     const uuid13 = generateUUID()
     const uuid14 = generateUUID()
