@@ -6,7 +6,7 @@ interface KPICardProps {
   value: string
   change: string
   trend: 'up' | 'down'
-  icon: _LucideIcon
+  icon: typeof _LucideIcon
 }
 
 const KPICard: React.FC<KPICardProps> = ({ title, value, change, trend, icon: Icon }) => {
