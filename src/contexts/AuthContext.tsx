@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser({
           id: session.user.id,
           email: session.user.email || '',
-          role: 'employee' // Default role, should be fetched from database
+          role: 'admin' // Default role, should be fetched from database
         })
       }
       setLoading(false)
