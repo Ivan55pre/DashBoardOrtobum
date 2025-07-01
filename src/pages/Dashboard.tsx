@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { TrendingUp, TrendingDown, _DollarSign, Package, _Users, _ShoppingCart, CreditCard, Banknote, FileText, BarChart3 } from 'lucide-react'
+import { TrendingUp, TrendingDown, Package, CreditCard, Banknote, FileText, BarChart3 } from 'lucide-react'
 import { supabase } from '../contexts/AuthContext'
 import { useAuth } from '../contexts/AuthContext'
 
