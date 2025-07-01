@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ExternalLink, TrendingUp, TrendingDown, Banknote, CreditCard, Package, BarChart3 } from 'lucide-react'
 import { supabase } from '../contexts/AuthContext'
 import { useAuth } from '../contexts/AuthContext'
-import { useTelegram } from '../contexts/TelegramContext'
+//import { useTelegram } from '../contexts/TelegramContext'
 
 interface DashboardData {
   cashBankTotal: number
@@ -17,7 +17,7 @@ interface DashboardData {
 
 const TelegramDashboard: React.FC = () => {
   const { user } = useAuth()
-  const { _webApp } = useTelegram()
+  //const { webApp } = useTelegram()
   const [dashboardData, setDashboardData] = useState<DashboardData>({
     cashBankTotal: 0,
     debtTotal: 0,
