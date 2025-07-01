@@ -64,7 +64,7 @@ const DataTable: React.FC<DataTableProps> = ({ title }) => {
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-dark-700">
             <tr>
-              {['Дата', 'Сумма', 'Статус', 'Клиент'].map((header, index) => (
+              {['Дата', 'Сумма', 'Статус', 'Клиент'].map((header, _index) => (
                 <th
                   key={header}
                   onClick={() => handleSort(header.toLowerCase())}
