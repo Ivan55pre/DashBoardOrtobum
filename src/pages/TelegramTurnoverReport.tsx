@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ChevronDown, ChevronRight, ExternalLink, Menu } from 'lucide-react'
 import { supabase } from '../contexts/AuthContext'
 import { useAuth } from '../contexts/AuthContext'
-import { useTelegram } from '../contexts/TelegramContext'
+//import { useTelegram } from '../contexts/TelegramContext'
 
 interface InventoryTurnoverData {
   id: string
@@ -24,7 +24,7 @@ interface InventoryTurnoverData {
 
 const TelegramTurnoverReport: React.FC = () => {
   const { user } = useAuth()
-  const { _webApp } = useTelegram()
+  //const { webApp } = useTelegram()
   const [data, setData] = useState<InventoryTurnoverData[]>([])
   const [loading, setLoading] = useState(true)
   const [reportDate, _setReportDate] = useState(new Date().toISOString().split('T')[0])
