@@ -171,7 +171,7 @@ const TelegramTurnoverReport: React.FC = () => {
     const uuid3 = generateUUID()
     const uuid4 = generateUUID()
     const uuid5 = generateUUID()
-    const _uuid6 = generateUUID()
+    //const _uuid6 = generateUUID()
     //const _uuid7 = generateUUID()
     //const _uuid8 = generateUUID()
     //const _uuid9 = generateUUID()
