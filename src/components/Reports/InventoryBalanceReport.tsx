@@ -64,7 +64,6 @@ const InventoryBalanceReport: React.FC = () => {
       const { data: existingData, error } = await supabase
         .from('inventory_balance_reports')
         .select('*')
-        .eq('user_id', user?.id)
         .eq('report_date', reportDate)
         .order('level')
         .order('nomenclature')
@@ -155,7 +154,6 @@ const InventoryBalanceReport: React.FC = () => {
     try {
       const dataToInsert = flattenHierarchy(sampleData).map(item => ({
         id: item.id,
-        user_id: user?.id,
         report_date: reportDate,
         nomenclature: item.nomenclature,
         parent_nomenclature_id: item.parent_nomenclature_id,
