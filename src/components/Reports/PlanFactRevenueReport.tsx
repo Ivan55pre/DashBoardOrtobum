@@ -63,7 +63,6 @@ const PlanFactRevenueReport: React.FC = () => {
       const { data: existingData, error } = await supabase
         .from('plan_fact_revenue_reports')
         .select('*')
-        .eq('user_id', user?.id)
         .eq('report_date', reportDate)
         .order('level')
         .order('organization_name')
@@ -154,7 +153,6 @@ const PlanFactRevenueReport: React.FC = () => {
     try {
       const dataToInsert = flattenHierarchy(sampleData).map(item => ({
         id: item.id,
-        user_id: user?.id,
         report_date: reportDate,
         organization_name: item.organization_name,
         parent_organization_id: item.parent_organization_id,
