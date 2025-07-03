@@ -4,7 +4,6 @@
   1. Новые таблицы
     - `inventory_balance_reports`
       - `id` (uuid, primary key)
-      - `user_id` (uuid, foreign key)
       - `report_date` (date)
       - `nomenclature` (text) - номенклатура товара
       - `parent_nomenclature_id` (uuid, self-reference) - для иерархии
@@ -26,7 +25,6 @@
 
 CREATE TABLE IF NOT EXISTS inventory_balance_reports (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   report_date date DEFAULT CURRENT_DATE,
   nomenclature text NOT NULL,
   parent_nomenclature_id uuid REFERENCES inventory_balance_reports(id) ON DELETE CASCADE,
@@ -50,11 +48,10 @@ CREATE POLICY "Users can manage own inventory balance reports"
   ON inventory_balance_reports
   FOR ALL
   TO authenticated
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (true)
+  WITH CHECK (true);
 
 -- Индексы для улучшения производительности
-CREATE INDEX IF NOT EXISTS idx_inventory_balance_user_id ON inventory_balance_reports(user_id);
 CREATE INDEX IF NOT EXISTS idx_inventory_balance_date ON inventory_balance_reports(report_date);
 CREATE INDEX IF NOT EXISTS idx_inventory_balance_parent ON inventory_balance_reports(parent_nomenclature_id);
 CREATE INDEX IF NOT EXISTS idx_inventory_balance_level ON inventory_balance_reports(level);
