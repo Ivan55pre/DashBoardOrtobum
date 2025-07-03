@@ -4,7 +4,6 @@
   1. Новые таблицы
     - `cash_bank_reports`
       - `id` (uuid, primary key)
-      - `user_id` (uuid, foreign key)
       - `report_date` (date)
       - `organization_name` (text)
       - `account_name` (text) - название счета/кассы
@@ -26,7 +25,6 @@
 
 CREATE TABLE IF NOT EXISTS cash_bank_reports (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   report_date date DEFAULT CURRENT_DATE,
   organization_name text NOT NULL,
   account_name text NOT NULL,
@@ -46,15 +44,22 @@ CREATE TABLE IF NOT EXISTS cash_bank_reports (
 ALTER TABLE cash_bank_reports ENABLE ROW LEVEL SECURITY;
 
 -- Политики безопасности
-CREATE POLICY "Users can manage own cash bank reports"
+-- было
+--CREATE POLICY "Users can manage own cash bank reports"
+-- ON cash_bank_reports
+--FOR ALL
+--  TO authenticated
+--  USING (auth.uid() = user_id)
+--  WITH CHECK (auth.uid() = user_id);
+-- стало  
+  CREATE POLICY "Users can manage all cash bank reports"
   ON cash_bank_reports
   FOR ALL
   TO authenticated
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (true)
+  WITH CHECK (true);
 
 -- Индексы для улучшения производительности
-CREATE INDEX IF NOT EXISTS idx_cash_bank_reports_user_id ON cash_bank_reports(user_id);
 CREATE INDEX IF NOT EXISTS idx_cash_bank_reports_date ON cash_bank_reports(report_date);
 CREATE INDEX IF NOT EXISTS idx_cash_bank_reports_parent ON cash_bank_reports(parent_organization_id);
 CREATE INDEX IF NOT EXISTS idx_cash_bank_reports_level ON cash_bank_reports(level);
