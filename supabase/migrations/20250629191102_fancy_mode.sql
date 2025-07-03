@@ -4,7 +4,6 @@
   1. Новые таблицы
     - `plan_fact_revenue_reports`
       - `id` (uuid, primary key)
-      - `user_id` (uuid, foreign key)
       - `report_date` (date)
       - `organization_name` (text)
       - `parent_organization_id` (uuid, self-reference)
@@ -25,7 +24,6 @@
 
 CREATE TABLE IF NOT EXISTS plan_fact_revenue_reports (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   report_date date DEFAULT CURRENT_DATE,
   organization_name text NOT NULL,
   parent_organization_id uuid REFERENCES plan_fact_revenue_reports(id) ON DELETE CASCADE,
@@ -48,11 +46,10 @@ CREATE POLICY "Users can manage own plan fact revenue reports"
   ON plan_fact_revenue_reports
   FOR ALL
   TO authenticated
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (true)
+  WITH CHECK (true);
 
 -- Индексы для улучшения производительности
-CREATE INDEX IF NOT EXISTS idx_plan_fact_revenue_user_id ON plan_fact_revenue_reports(user_id);
 CREATE INDEX IF NOT EXISTS idx_plan_fact_revenue_date ON plan_fact_revenue_reports(report_date);
 CREATE INDEX IF NOT EXISTS idx_plan_fact_revenue_parent ON plan_fact_revenue_reports(parent_organization_id);
 CREATE INDEX IF NOT EXISTS idx_plan_fact_revenue_level ON plan_fact_revenue_reports(level);
