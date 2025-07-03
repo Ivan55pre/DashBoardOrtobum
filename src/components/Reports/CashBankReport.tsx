@@ -66,7 +66,6 @@ const CashBankReport: React.FC = () => {
       const { data: existingData, error } = await supabase
         .from('cash_bank_reports')
         .select('*')
-        .eq('user_id', user?.id)
         .eq('report_date', reportDate)
         .order('level')
         .order('organization_name')
@@ -181,21 +180,20 @@ const CashBankReport: React.FC = () => {
     const sampleData = getSampleData()
     
     try {
-      const dataToInsert = flattenHierarchy(sampleData).map(item => ({
-        id: item.id,
-        user_id: user?.id,
-        report_date: reportDate,
-        organization_name: item.organization_name,
-        account_name: item.account_name,
-        parent_organization_id: item.parent_organization_id,
-        balance_start: item.balance_start,
-        income_amount: item.income_amount,
-        expense_amount: item.expense_amount,
-        balance_current: item.balance_current,
-        account_type: item.account_type,
-        level: item.level,
-        is_total_row: item.is_total_row
-      }))
+  const dataToInsert = flattenHierarchy(sampleData).map(item => ({
+    id: item.id,
+    report_date: reportDate,
+    organization_name: item.organization_name,
+    account_name: item.account_name,
+    parent_organization_id: item.parent_organization_id,
+    balance_start: item.balance_start,
+    income_amount: item.income_amount,
+    expense_amount: item.expense_amount,
+    balance_current: item.balance_current,
+    account_type: item.account_type,
+    level: item.level,
+    is_total_row: item.is_total_row
+  }))
 
       const { error } = await supabase
         .from('cash_bank_reports')
