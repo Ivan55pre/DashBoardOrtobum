@@ -4,7 +4,6 @@
   1. Новые таблицы
     - `inventory_turnover_reports`
       - `id` (uuid, primary key)
-      - `user_id` (uuid, foreign key)
       - `report_date` (date)
       - `organization_name` (text)
       - `category_name` (text)
@@ -27,7 +26,6 @@
 
 CREATE TABLE IF NOT EXISTS inventory_turnover_reports (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   report_date date DEFAULT CURRENT_DATE,
   organization_name text NOT NULL,
   category_name text NOT NULL,
@@ -53,11 +51,10 @@ CREATE POLICY "Users can manage own inventory turnover reports"
   ON inventory_turnover_reports
   FOR ALL
   TO authenticated
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (true)
+  WITH CHECK (true);
 
 -- Индексы для улучшения производительности
-CREATE INDEX IF NOT EXISTS idx_inventory_turnover_user_id ON inventory_turnover_reports(user_id);
 CREATE INDEX IF NOT EXISTS idx_inventory_turnover_date ON inventory_turnover_reports(report_date);
 CREATE INDEX IF NOT EXISTS idx_inventory_turnover_parent ON inventory_turnover_reports(parent_category_id);
 CREATE INDEX IF NOT EXISTS idx_inventory_turnover_level ON inventory_turnover_reports(level);
